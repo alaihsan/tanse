@@ -42,7 +42,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Email address</Label>
+                        <Label htmlFor="email" className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">Email address</Label>
                         <Input
                             id="email"
                             type="email"
@@ -53,15 +53,16 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
                             placeholder="email@example.com"
+                            className="h-12 text-base px-4 border-neutral-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg"
                         />
                         <InputError message={errors.email} />
                     </div>
 
                     <div className="grid gap-2">
                         <div className="flex items-center">
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password" className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">Password</Label>
                             {canResetPassword && (
-                                <TextLink href={route('password.request')} className="ml-auto text-sm" tabIndex={5}>
+                                <TextLink href={route('password.request')} className="ml-auto text-sm text-indigo-650 hover:text-indigo-850" tabIndex={5}>
                                     Forgot password?
                                 </TextLink>
                             )}
@@ -75,26 +76,27 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             placeholder="Password"
+                            className="h-12 text-base px-4 border-neutral-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg"
                         />
                         <InputError message={errors.password} />
                     </div>
 
-                    <div className="flex items-center space-x-3">
-                        <Checkbox id="remember" name="remember" tabIndex={3} />
-                        <Label htmlFor="remember">Remember me</Label>
+                    <div className="flex items-center space-x-3 py-1 select-none">
+                        <Checkbox 
+                            id="remember" 
+                            name="remember" 
+                            tabIndex={3} 
+                            className="size-5 border-neutral-350 data-[state=checked]:bg-indigo-600 data-[state=checked]:border-indigo-600"
+                            checked={data.remember}
+                            onCheckedChange={(checked) => setData('remember', !!checked)}
+                        />
+                        <Label htmlFor="remember" className="text-sm font-medium text-neutral-600 dark:text-neutral-400 cursor-pointer">Remember me</Label>
                     </div>
 
-                    <Button type="submit" className="mt-4 w-full" tabIndex={4} disabled={processing}>
-                        {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                    <Button type="submit" className="mt-4 w-full h-12 text-base font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-sm flex items-center justify-center gap-2" tabIndex={4} disabled={processing}>
+                        {processing && <LoaderCircle className="h-5 w-5 animate-spin" />}
                         Log in
                     </Button>
-                </div>
-
-                <div className="text-muted-foreground text-center text-sm">
-                    Don't have an account?{' '}
-                    <TextLink href={route('register')} tabIndex={5}>
-                        Sign up
-                    </TextLink>
                 </div>
             </form>
 

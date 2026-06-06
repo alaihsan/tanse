@@ -14,7 +14,14 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+
+    return Inertia::render('auth/login', [
+        'canResetPassword' => Route::has('password.request'),
+        'status' => session('status'),
+    ]);
 })->name('home');
 
 Route::middleware(['auth'])->group(function () {

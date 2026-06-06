@@ -95,7 +95,7 @@ export default function ViolationPrint({ violation }: Props) {
                 {/* Letterhead (Kop Surat) */}
                 <div className="w-full text-center border-b-4 border-double border-neutral-900 pb-2">
                     <img 
-                        src="/kop_al_azhar.png" 
+                        src="/kop_al_azhar.jpg" 
                         alt="Kop Surat Al Azhar" 
                         className="w-full h-auto max-h-[120px] object-contain mx-auto"
                     />

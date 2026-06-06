@@ -5,6 +5,7 @@ use App\Models\Pasal;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\Violation;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -225,7 +226,9 @@ it('can grant remission with an attachment file', function () {
     expect($updatedViolation->status)->toBe('diremisi');
     expect($updatedViolation->remission_attachment)->not->toBeNull();
 
-    Storage::disk('public')->assertExists($updatedViolation->remission_attachment);
+    /** @var FilesystemAdapter $disk */
+    $disk = Storage::disk('public');
+    $disk->assertExists($updatedViolation->remission_attachment);
 });
 
 it('can log a violation with multiple attachment files', function () {
@@ -257,8 +260,10 @@ it('can log a violation with multiple attachment files', function () {
     expect($violation)->not->toBeNull();
     expect($violation->attachments)->toBeArray()->toHaveCount(2);
 
-    Storage::disk('public')->assertExists($violation->attachments[0]);
-    Storage::disk('public')->assertExists($violation->attachments[1]);
+    /** @var FilesystemAdapter $disk */
+    $disk = Storage::disk('public');
+    $disk->assertExists($violation->attachments[0]);
+    $disk->assertExists($violation->attachments[1]);
 });
 
 it('can record activity logs for CRUD operations', function () {
