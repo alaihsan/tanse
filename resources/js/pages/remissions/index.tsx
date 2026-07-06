@@ -26,6 +26,10 @@ interface Pasal {
     id: number;
     name: string;
     ayat: string | null;
+    sub_ayat: string | null;
+    deskripsi_ayat: string | null;
+    description: string | null;
+    keterangan: string | null;
     level: 'ringan' | 'sedang' | 'berat';
     sanction: string;
 }

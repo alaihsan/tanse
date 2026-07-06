@@ -68,10 +68,43 @@ it('can bulk import students under classroom', function () {
     ]);
 });
 
+it('can bulk import students with empty or null nis', function () {
+    $classroom = Classroom::create(['name' => 'X IPA 1']);
+
+    $response = $this->actingAs($this->user)->post(route('classrooms.students.bulk', $classroom->id), [
+        'students' => [
+            ['nis' => '', 'name' => 'Andi Wijaya'],
+            ['nis' => null, 'name' => 'Budi Prasetyo'],
+            ['nis' => '   ', 'name' => 'Candra Wijaya'],
+        ],
+    ]);
+
+    $response->assertRedirect(route('classrooms.index'));
+    $this->assertDatabaseHas('students', [
+        'classroom_id' => $classroom->id,
+        'nis' => null,
+        'name' => 'Andi Wijaya',
+    ]);
+    $this->assertDatabaseHas('students', [
+        'classroom_id' => $classroom->id,
+        'nis' => null,
+        'name' => 'Budi Prasetyo',
+    ]);
+    $this->assertDatabaseHas('students', [
+        'classroom_id' => $classroom->id,
+        'nis' => null,
+        'name' => 'Candra Wijaya',
+    ]);
+});
+
 it('can create a pasal', function () {
     $response = $this->actingAs($this->user)->post(route('pasals.store'), [
         'name' => 'Ketertiban',
-        'ayat' => 'Ayat 1',
+        'ayat' => '1',
+        'sub_ayat' => '1A',
+        'deskripsi_ayat' => 'Deskripsi ayat tata tertib',
+        'description' => 'Isi pasal tata tertib',
+        'keterangan' => 'Keterangan aturan',
         'level' => 'ringan',
         'sanction' => 'Teguran lisan',
     ]);
@@ -79,7 +112,11 @@ it('can create a pasal', function () {
     $response->assertRedirect(route('pasals.index'));
     $this->assertDatabaseHas('pasals', [
         'name' => 'Ketertiban',
-        'ayat' => 'Ayat 1',
+        'ayat' => '1',
+        'sub_ayat' => '1A',
+        'deskripsi_ayat' => 'Deskripsi ayat tata tertib',
+        'description' => 'Isi pasal tata tertib',
+        'keterangan' => 'Keterangan aturan',
         'level' => 'ringan',
         'sanction' => 'Teguran lisan',
     ]);
@@ -88,14 +125,22 @@ it('can create a pasal', function () {
 it('can update a pasal', function () {
     $pasal = Pasal::create([
         'name' => 'Ketertiban',
-        'ayat' => 'Ayat 1',
+        'ayat' => '1',
+        'sub_ayat' => '1A',
+        'deskripsi_ayat' => 'Deskripsi ayat tata tertib',
+        'description' => 'Isi pasal tata tertib',
+        'keterangan' => 'Keterangan aturan',
         'level' => 'ringan',
         'sanction' => 'Teguran lisan',
     ]);
 
     $response = $this->actingAs($this->user)->put(route('pasals.update', $pasal->id), [
         'name' => 'Ketertiban',
-        'ayat' => 'Ayat 2',
+        'ayat' => '2',
+        'sub_ayat' => '2B',
+        'deskripsi_ayat' => 'Deskripsi ayat tata tertib terupdate',
+        'description' => 'Isi pasal tata tertib terupdate',
+        'keterangan' => 'Keterangan aturan terupdate',
         'level' => 'sedang',
         'sanction' => 'Teguran tertulis',
     ]);
@@ -103,7 +148,9 @@ it('can update a pasal', function () {
     $response->assertRedirect(route('pasals.index'));
     $this->assertDatabaseHas('pasals', [
         'id' => $pasal->id,
-        'ayat' => 'Ayat 2',
+        'ayat' => '2',
+        'sub_ayat' => '2B',
+        'deskripsi_ayat' => 'Deskripsi ayat tata tertib terupdate',
         'level' => 'sedang',
         'sanction' => 'Teguran tertulis',
     ]);
@@ -347,4 +394,36 @@ it('can access print page for remission', function () {
 
     $response = $this->actingAs($this->user)->get(route('remissions.print', $violation->id));
     $response->assertSuccessful();
+});
+
+it('can edit a violation log', function () {
+    $classroom = Classroom::create(['name' => 'X IPA 1']);
+    $student = Student::create(['classroom_id' => $classroom->id, 'name' => 'Ahmad']);
+    $pasal = Pasal::create([
+        'name' => 'Ketertiban',
+        'ayat' => 'Ayat 1',
+        'level' => 'ringan',
+        'sanction' => 'Teguran lisan',
+    ]);
+    $violation = Violation::create([
+        'student_id' => $student->id,
+        'pasal_id' => $pasal->id,
+        'user_id' => $this->user->id,
+        'notes' => 'Terlambat',
+        'violation_date' => '2026-06-06',
+    ]);
+
+    $response = $this->actingAs($this->user)->put(route('violations.update', $violation->id), [
+        'student_id' => $student->id,
+        'pasal_id' => $pasal->id,
+        'notes' => 'Terlambat parah',
+        'violation_date' => '2026-06-07',
+    ]);
+
+    $response->assertRedirect(route('violations.index'));
+    $this->assertDatabaseHas('violations', [
+        'id' => $violation->id,
+        'notes' => 'Terlambat parah',
+        'violation_date' => '2026-06-07 00:00:00',
+    ]);
 });

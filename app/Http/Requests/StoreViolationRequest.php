@@ -28,7 +28,7 @@ class StoreViolationRequest extends FormRequest
             'notes' => ['nullable', 'string'],
             'violation_date' => ['required', 'date'],
             'attachments' => ['nullable', 'array'],
-            'attachments.*' => ['file', 'mimes:pdf,jpg,jpeg,png', 'max:2048'],
+            'attachments.*' => ['file', 'mimes:pdf,jpg,jpeg,png,mp4,mov,webm,ogg,3gp', 'max:20480'],
         ];
     }
 }

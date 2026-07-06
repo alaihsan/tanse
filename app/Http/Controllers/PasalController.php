@@ -29,7 +29,8 @@ class PasalController extends Controller
     public function store(StorePasalRequest $request): RedirectResponse
     {
         $pasal = Pasal::create($request->validated());
-        ActivityLog::log('CREATE', "Membuat pasal baru: {$pasal->name} ".($pasal->ayat ? "({$pasal->ayat})" : ''));
+        $ayatStr = $pasal->ayat ? "({$pasal->ayat}".($pasal->sub_ayat ? " - {$pasal->sub_ayat}" : '').')' : '';
+        ActivityLog::log('CREATE', "Membuat pasal baru: {$pasal->name} {$ayatStr}");
 
         return redirect()->route('pasals.index');
     }
@@ -40,7 +41,8 @@ class PasalController extends Controller
     public function update(Pasal $pasal, StorePasalRequest $request): RedirectResponse
     {
         $pasal->update($request->validated());
-        ActivityLog::log('UPDATE', "Mengubah pasal: {$pasal->name} ".($pasal->ayat ? "({$pasal->ayat})" : ''));
+        $ayatStr = $pasal->ayat ? "({$pasal->ayat}".($pasal->sub_ayat ? " - {$pasal->sub_ayat}" : '').')' : '';
+        ActivityLog::log('UPDATE', "Mengubah pasal: {$pasal->name} {$ayatStr}");
 
         return redirect()->route('pasals.index');
     }
@@ -52,8 +54,10 @@ class PasalController extends Controller
     {
         $name = $pasal->name;
         $ayat = $pasal->ayat;
+        $subAyat = $pasal->sub_ayat;
         $pasal->delete();
-        ActivityLog::log('DELETE', "Menghapus pasal: {$name} ".($ayat ? "({$ayat})" : ''));
+        $ayatStr = $ayat ? "({$ayat}".($subAyat ? " - {$subAyat}" : '').')' : '';
+        ActivityLog::log('DELETE', "Menghapus pasal: {$name} {$ayatStr}");
 
         return redirect()->route('pasals.index');
     }

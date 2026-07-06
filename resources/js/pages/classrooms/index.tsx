@@ -15,6 +15,10 @@ interface Pasal {
     id: number;
     name: string;
     ayat: string | null;
+    sub_ayat: string | null;
+    deskripsi_ayat: string | null;
+    description: string | null;
+    keterangan: string | null;
     level: 'ringan' | 'sedang' | 'berat';
     sanction: string;
 }
@@ -132,18 +136,28 @@ export default function ClassroomsIndex({ classrooms }: Props) {
         const rows = text.split(/\r?\n/);
         const parsed: { nis: string; name: string }[] = [];
         rows.forEach(row => {
-            if (row.trim() === '') return;
-            const cols = row.split('\t');
+            const trimmed = row.trim();
+            if (trimmed === '') return;
+            
+            const cols = trimmed.split('\t');
             if (cols.length >= 2) {
                 parsed.push({
                     nis: cols[0].trim(),
                     name: cols[1].trim(),
                 });
-            } else if (cols.length === 1) {
-                parsed.push({
-                    nis: '',
-                    name: cols[0].trim(),
-                });
+            } else {
+                const match = trimmed.match(/^(\d+)\s+(.+)$/);
+                if (match) {
+                    parsed.push({
+                        nis: match[1],
+                        name: match[2].trim(),
+                    });
+                } else {
+                    parsed.push({
+                        nis: '',
+                        name: trimmed,
+                    });
+                }
             }
         });
         setExcelData(parsed);

@@ -25,7 +25,10 @@ class StorePasalRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'ayat' => ['nullable', 'string', 'max:255'],
+            'sub_ayat' => ['nullable', 'string', 'max:255'],
+            'deskripsi_ayat' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
+            'keterangan' => ['nullable', 'string'],
             'level' => ['required', 'string', 'in:ringan,sedang,berat'],
             'sanction' => ['required', 'string'],
         ];

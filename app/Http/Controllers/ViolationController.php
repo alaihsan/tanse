@@ -72,6 +72,30 @@ class ViolationController extends Controller
     }
 
     /**
+     * Update the specified violation log in storage.
+     */
+    public function update(StoreViolationRequest $request, Violation $violation): RedirectResponse
+    {
+        $data = $request->validated();
+        $attachments = $request->input('existing_attachments', $violation->attachments ?? []);
+
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $path = $file->store('violations', 'public');
+                $attachments[] = $path;
+            }
+        }
+
+        $violation->update(array_merge($data, [
+            'attachments' => $attachments,
+        ]));
+
+        ActivityLog::log('UPDATE', 'Memperbarui catatan pelanggaran untuk '.($violation->student ? $violation->student->name : '-').': '.($violation->pasal ? $violation->pasal->name : '-'));
+
+        return redirect()->route('violations.index');
+    }
+
+    /**
      * Print warning letter for the violation.
      */
     public function print(Violation $violation): Response

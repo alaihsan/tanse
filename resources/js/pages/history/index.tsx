@@ -162,7 +162,7 @@ export default function HistoryIndex({ logs }: Props) {
                                                 {formatDateTime(log.created_at)}
                                             </span>
                                         </div>
-                                        <div className="text-sm text-neutral-900 dark:text-neutral-150 font-medium">
+                                        <div className="text-sm text-neutral-900 dark:text-neutral-100 font-medium">
                                             {log.description}
                                         </div>
                                     </div>

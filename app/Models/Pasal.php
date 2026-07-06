@@ -15,7 +15,10 @@ class Pasal extends Model
     protected $fillable = [
         'name',
         'ayat',
+        'sub_ayat',
+        'deskripsi_ayat',
         'description',
+        'keterangan',
         'level',
         'sanction',
     ];

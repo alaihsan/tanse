@@ -19,6 +19,10 @@ interface Pasal {
     id: number;
     name: string;
     ayat: string | null;
+    sub_ayat: string | null;
+    deskripsi_ayat: string | null;
+    description: string | null;
+    keterangan: string | null;
     level: 'ringan' | 'sedang' | 'berat';
     sanction: string;
 }
@@ -147,8 +151,29 @@ export default function ViolationPrint({ violation }: Props) {
                         <div className="grid grid-cols-12 gap-x-2">
                             <span className="col-span-3 font-semibold text-neutral-600">Aturan/Pasal</span>
                             <span className="col-span-1 text-center">:</span>
-                            <span className="col-span-8 font-bold text-neutral-800">{violation.pasal.name} {violation.pasal.ayat && `(${violation.pasal.ayat})`}</span>
+                            <span className="col-span-8 font-bold text-neutral-800">{violation.pasal.name} {violation.pasal.ayat && `(${violation.pasal.ayat}${violation.pasal.sub_ayat ? ` - ${violation.pasal.sub_ayat}` : ''})`}</span>
                         </div>
+                        {violation.pasal.description && (
+                            <div className="grid grid-cols-12 gap-x-2">
+                                <span className="col-span-3 font-semibold text-neutral-600">Isi Pasal</span>
+                                <span className="col-span-1 text-center">:</span>
+                                <span className="col-span-8 text-neutral-800">{violation.pasal.description}</span>
+                            </div>
+                        )}
+                        {violation.pasal.deskripsi_ayat && (
+                            <div className="grid grid-cols-12 gap-x-2">
+                                <span className="col-span-3 font-semibold text-neutral-600">Deskripsi Ayat</span>
+                                <span className="col-span-1 text-center">:</span>
+                                <span className="col-span-8 text-neutral-800">{violation.pasal.deskripsi_ayat}</span>
+                            </div>
+                        )}
+                        {violation.pasal.keterangan && (
+                            <div className="grid grid-cols-12 gap-x-2">
+                                <span className="col-span-3 font-semibold text-neutral-600">Keterangan</span>
+                                <span className="col-span-1 text-center">:</span>
+                                <span className="col-span-8 text-neutral-800">{violation.pasal.keterangan}</span>
+                            </div>
+                        )}
                         <div className="grid grid-cols-12 gap-x-2">
                             <span className="col-span-3 font-semibold text-neutral-600">Tingkat</span>
                             <span className="col-span-1 text-center">:</span>
@@ -157,7 +182,7 @@ export default function ViolationPrint({ violation }: Props) {
                         <div className="grid grid-cols-12 gap-x-2">
                             <span className="col-span-3 font-semibold text-neutral-600">Sanksi Disiplin</span>
                             <span className="col-span-1 text-center">:</span>
-                            <span className="col-span-8 text-neutral-800">{violation.pasal.sanction}</span>
+                            <span className="col-span-8 text-neutral-850">{violation.pasal.sanction}</span>
                         </div>
                         {violation.notes && (
                             <div className="grid grid-cols-12 gap-x-2 border-t pt-2 mt-2">
@@ -178,7 +203,7 @@ export default function ViolationPrint({ violation }: Props) {
                 {/* Date & Signature Blocks */}
                 <div className="mt-12 space-y-12">
                     <div className="text-right text-sm">
-                        Jakarta, {getTodayDate()}
+                        Jakarta, {formatDate(violation.violation_date)}
                     </div>
 
                     <div className="grid grid-cols-3 text-center text-xs font-semibold gap-4 leading-normal">

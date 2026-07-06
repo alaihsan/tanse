@@ -206,10 +206,10 @@ export default function Dashboard({ stats, searchResults, searchQuery }: Props) 
                                                     <div className="text-[10px] text-neutral-500">NIS: {student.nis || '-'} • Kelas: {student.classroom?.name || '-'}</div>
                                                 </div>
                                                 <Link 
-                                                    href="/classrooms"
+                                                    href={`/violations?q=${encodeURIComponent(student.name)}`}
                                                     className="inline-flex items-center gap-1 text-[10px] text-indigo-600 hover:text-indigo-800 font-semibold dark:text-indigo-400"
                                                 >
-                                                    Kelola <ArrowRight className="size-3" />
+                                                    Kelola / Log <ArrowRight className="size-3" />
                                                 </Link>
                                             </div>
                                         ))}
@@ -232,10 +232,10 @@ export default function Dashboard({ stats, searchResults, searchQuery }: Props) 
                                             <div key={classroom.id} className="py-2.5 first:pt-0 last:pb-0 flex items-center justify-between">
                                                 <div className="text-xs font-semibold text-neutral-850 dark:text-neutral-150">Kelas {classroom.name}</div>
                                                 <Link 
-                                                    href="/classrooms"
+                                                    href={`/violations?q=${encodeURIComponent(classroom.name)}`}
                                                     className="inline-flex items-center gap-1 text-[10px] text-indigo-600 hover:text-indigo-800 font-semibold dark:text-indigo-400"
                                                 >
-                                                    Lihat Kelas <ArrowRight className="size-3" />
+                                                    Lihat Log Kelas <ArrowRight className="size-3" />
                                                 </Link>
                                             </div>
                                         ))}
@@ -255,7 +255,7 @@ export default function Dashboard({ stats, searchResults, searchQuery }: Props) 
                                     </CardHeader>
                                     <CardContent className="pt-3 divide-y divide-neutral-100 dark:divide-neutral-800 max-h-[350px] overflow-y-auto pr-1">
                                         {searchResults.violations.map(v => (
-                                            <div key={v.id} className="py-3 first:pt-0 last:pb-0 space-y-1.5">
+                                            <div key={v.id} className="py-3 first:pt-0 last:pb-0 space-y-1.5 border-b last:border-0 pb-3 last:pb-0 border-neutral-100 dark:border-neutral-850">
                                                 <div className="flex justify-between items-start">
                                                     <div>
                                                         <div className="text-xs font-bold text-neutral-900 dark:text-neutral-100">{v.student?.name}</div>
@@ -266,6 +266,14 @@ export default function Dashboard({ stats, searchResults, searchQuery }: Props) 
                                                 <div className="text-xs text-neutral-700 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-900 p-2 rounded-md border border-neutral-100 dark:border-neutral-850">
                                                     <strong>Pasal:</strong> {v.pasal?.name} {v.pasal?.ayat && `(${v.pasal.ayat})`}
                                                     {v.notes && <div className="mt-1 text-[11px] italic">"{v.notes}"</div>}
+                                                </div>
+                                                <div className="flex justify-end">
+                                                    <Link 
+                                                        href={`/violations?q=${encodeURIComponent(v.student?.name || '')}`}
+                                                        className="inline-flex items-center gap-1 text-[10px] text-indigo-600 hover:text-indigo-800 font-semibold dark:text-indigo-400"
+                                                    >
+                                                        Lihat Detail <ArrowRight className="size-3" />
+                                                    </Link>
                                                 </div>
                                             </div>
                                         ))}
