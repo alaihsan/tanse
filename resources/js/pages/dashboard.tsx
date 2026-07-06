@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
@@ -75,6 +75,59 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
 ];
+
+function QuoteCycler() {
+    const quotes = [
+        "\"Mendidik pikiran tanpa mendidik hati bukanlah pendidikan sama sekali.\" – Aristoteles",
+        "\"Disiplin adalah jembatan penghubung antara cita-cita dan pencapaiannya.\" – Jim Rohn",
+        "\"Guru terbaik mendidik dari hati, bukan hanya dari buku pelajaran.\" – Anonim",
+        "\"Sebelum mendisiplinkan orang lain, mulailah mendisiplinkan diri sendiri terlebih dahulu.\" – Anonim",
+        "\"Tujuan utama pendidikan bukanlah sekadar pengetahuan, melainkan tindakan nyata.\" – Herbert Spencer",
+        "\"Pembinaan karakter yang kuat adalah fondasi utama bagi kecerdasan yang sejati.\" – Martin Luther King Jr.",
+        "\"Mengajar anak untuk menghitung itu baik, mendidik apa yang berharga adalah yang terbaik.\" – Bob Talbert",
+        "\"Disiplin diri adalah bentuk tertinggi dari rasa hormat dan kasih sayang pada diri sendiri.\" – Anonim",
+        "\"Pendidikan bukanlah sekadar mengisi wadah kosong, melainkan menyalakan api kehidupan.\" – Socrates",
+        "\"Mendidik anak dengan kasih sayang dan ketegasan melahirkan generasi tangguh berakhlak mulia.\" – Anonim"
+    ];
+
+    const [currentIdx, setCurrentIdx] = useState(0);
+    const [displayedText, setDisplayedText] = useState("");
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    useEffect(() => {
+        let timer: NodeJS.Timeout;
+        const currentQuote = quotes[currentIdx];
+        
+        if (isDeleting) {
+            timer = setTimeout(() => {
+                setDisplayedText(prev => prev.slice(0, -1));
+            }, 20); // Fast deletion speed
+        } else {
+            timer = setTimeout(() => {
+                setDisplayedText(currentQuote.slice(0, displayedText.length + 1));
+            }, 40); // Natural typing speed
+        }
+
+        if (!isDeleting && displayedText === currentQuote) {
+            timer = setTimeout(() => {
+                setIsDeleting(true);
+            }, 6000); // Wait for 6 seconds
+        } else if (isDeleting && displayedText === "") {
+            setIsDeleting(false);
+            setCurrentIdx(prev => (prev + 1) % quotes.length);
+        }
+
+        return () => clearTimeout(timer);
+    }, [displayedText, isDeleting, currentIdx]);
+
+    return (
+        <p className="text-indigo-100 text-sm md:text-base leading-relaxed min-h-[3rem] md:min-h-[2rem] flex items-center">
+            <span className="border-r-2 border-indigo-200/80 pr-1 animate-pulse">
+                {displayedText}
+            </span>
+        </p>
+    );
+}
 
 export default function Dashboard({ stats, searchResults, searchQuery }: Props) {
     const [searchQ, setSearchQ] = useState(searchQuery || '');
@@ -297,9 +350,7 @@ export default function Dashboard({ stats, searchResults, searchQuery }: Props) 
                                     Sistem Disiplin & Konseling
                                 </div>
                                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Selamat Datang di Tanse Alsen 22</h1>
-                                <p className="text-indigo-100 text-sm md:text-base leading-relaxed">
-                                    Aplikasi pemantauan perilaku dan pembinaan kedisiplinan siswa secara berkeadilan restoratif. Catat pelanggaran, kelola kelas, kelola pasal, dan pantau perkembangan karakter murid dengan mudah.
-                                </p>
+                                <QuoteCycler />
                             </div>
                         </div>
 
